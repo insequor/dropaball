@@ -1,0 +1,20 @@
+<script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+<script>
+    function setup(){
+        createCanvas(640, 480);
+    }
+
+
+    verticalDistance = 30;
+    function draw(){
+        if (verticalDistance < (400 - 20/2)) {
+            background('blue');
+            verticalDistance = verticalDistance + 1;
+            fill(color('red'));
+            circle(320, verticalDistance, 20);   
+
+            fill(color('green'));
+            rect(0, 400, 640, 80);
+        }
+    }
+</script>
