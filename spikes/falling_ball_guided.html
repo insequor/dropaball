@@ -1,0 +1,544 @@
+<html ng-app="App">
+    <head>
+        <title>Falling Ball</title>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+        
+        <style>
+            body {
+                padding:5px;
+            }
+
+            div{
+                _border-style: solid;
+            }
+
+            .Canvas {
+                width: 640px;
+                height: 480px;
+            }
+
+            .row{
+                padding: 5px;
+                border-bottom:1px solid gray;
+                border-top:1px solid gray;
+
+
+            }
+        </style>
+
+    </head>
+    <body ng-controller="Controller">
+        <h1>Falling Ball Exercise</h1>
+
+        This is the simple exercise to show how a ball falls from a certain height.
+        Physical accurrace is not the target
+
+        <h2>Starting Point</h2>
+
+        <div class="row">
+            <div class="col-md-6">
+                TODO: Re-formulate this to use https://editor.p5js.org/ or https://playcode.io/ . The first one 
+                works out of the box. Second one needs adding p5 into the libs list.
+
+                start.html has the minimum start code to use P5.js in such an exercise
+            </div>
+            <div class="col-md-6">
+                <pre>
+    &lt;script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"&gt;&lt;/script&gt;
+    &lt;script&gt;
+        function draw(){
+        }    
+    &lt;/script&gt;
+                </pre>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col-md-12">
+                <p>What is P5.js: Think it as a trusty helper. It knows things. In this specific case 
+                    it knows how to organize the work in our application. It knows that it will call 
+                    someone called "setup" when page is loaded. This is to give us a chance to tell 
+                    him what we want to be done. Then it knows that it will call someone called "draw" periodically.</p>
+
+                <p>What is a function: See the function as a logical grouping of a set of commands. 
+                    For example when someone tells you to "wash your face" what you do are a set of smaller actions:</p>
+
+                <ul>
+                    <li>go to the bathroom</li>
+                    <li>turn on the water</li>
+                    <li>wash your hands first (it requires a number of smaller actions like take wet your hands, get the soap and rub your hands, then rub your hands with water to make them bubbly...)</li>
+                    <li>gather water in your hands</li>
+                    <li>splash the water to your face</li>
+                    <li>rub your face with your hands</li>
+                    <li>dry your hands and face</li>
+                </ul>
+
+                <p>Instead of repeating all these instructions we just say "wash your face". It also enables us to use the same commands with different people where washing your face might require different set of instructions, like instead of going to the bathroom, go to the well and pull up some water.</p>
+            </div>
+        </div>
+        
+
+        <h2>Drawing the ball</h2>
+
+        <div class="row">
+            <div class="col-md-4">
+                Ball is a round object, a circle. P5.js knows how to draw different [shapes](https://p5js.org/reference/#group-Shape). Circle is one of them.
+
+                To draw a circle we need to decide where we will draw it, and how bit it will be. First one is called _coordinates_ and second one is called _diameter_.
+
+                Try...
+
+                Try changing the parameters and try to get an idea how each value affect the shape.
+
+                We shall see that (0, 0) is the top left corner of the page. And what we define is the center of the circle. We give the distance to the top left corner in horizontal and vertical direction (X and Y respectively).
+
+                > _circle_ is a function in p5js. This function requires three inputs, position and the diameter. Inputs are grouped within paranthesis and separated from each other with comma.
+            </div>
+            <div class="col-md-4">
+                <pre>
+    function draw(){
+        circle(30, 30, 20);
+    }           
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas1" class="Canvas">
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="started(1)" ng-click="start(1)">Try</button>
+            </div>
+        </div>
+        
+        
+        <h2>Moving the circle</h2>
+
+        <div class="row">
+            <div class="col-md-4">
+                We draw a static circle, it does not move. But we want it to fall. Falling means, the distance to the top left coriner in vertical direction should increase each time we draw the circle. In order to do that we need to remember what was the previous position of the ball, and increase the distance as required. We use something called a _variable_ to remember the things. In this case let's give it a name:
+            </div>
+            <div class="col-md-4">
+                <pre>
+    function draw(){
+        verticalDistance = 30;
+        circle(30, verticalDistance, 20);
+        verticalDistance = verticalDistance + 5;
+    }           
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas2" class="Canvas">
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="started(2)" ng-click="start(2)">Try</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!started(2)" ng-click="stop(2)">Reset</button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+                This did not seem to work. Our circle is still not moving. That's because each time we draw the circle we first remember that the _verticalDistance_ is 30. Then we increment it. But next time we remember it again as 30. If we want to remember it properly, like what was it when we previously draw it, we should move the _verticalDistance_ outside the _draw_ function.
+
+        Try...
+
+            </div>
+            <div class="col-md-4">
+                <pre>
+    verticalDistance = 30;
+    function draw(){
+        
+        circle(30, verticalDistance, 20);
+        verticalDistance = verticalDistance + 5;
+    }           
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas3" class="Canvas">
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="started(3)" ng-click="start(3)">Try</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!started(3)" ng-click="stop(3)">Reset</button>
+            </div>
+        </div>
+        
+
+        <div class="row">
+            <div class="col-md-4">
+                Now we see something moving. But there are couple of problems:
+
+        * Our circle is moving but it still leaves marks in previous places
+        * We only see it for a very short while. 
+
+        First problem is because p5js does not cleanup the page before drawing. We need to clean the background if we want to draw something on a clean surface each time. p5js has a function called _background_.
+
+        Try before doing any other drawing...
+
+            </div>
+            <div class="col-md-4">
+                <pre>
+    verticalDistance = 30;
+    function draw(){
+        background('blue');
+        circle(30, verticalDistance, 20);
+        verticalDistance = verticalDistance + 5;
+    }           
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas4" class="Canvas">
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="started(4)" ng-click="start(4)">Try</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!started(4)" ng-click="stop(4)">Reset</button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+                Now it is better. But our ball drops quite fast. Let's reduce the speed a bit by reducing the increment before each draw.
+
+                Try different increment values...
+
+                Second problem is about our drawing area. P5js does not use all page to draw, only part of it. We did not tell it how big a drawing area we want to it is using something default for now. This kind of instructions are usually given once, before we start drawing. P5js knows a function called _setup_ and if we use it we can give setup instructions like the canvas size.
+
+                Try...
+                        
+            </div>
+            <div class="col-md-4">
+                <pre>
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas5" class="Canvas">
+                </div>
+                <!--
+                <button type="button" class="btn btn-primary" ng-disabled="started(5)" ng-click="start(5)">Try</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!started(5)" ng-click="stop(5)">Reset</button>
+                -->
+            </div>
+        </div>
+
+        <h2>Hitting the ground</h2>>
+
+        <div class="row">
+            <div class="col-md-4">
+                We want our ball to fall and stop when it hits the ground. First we need to draw a ground. Simplest ground would be a straight horizontal line. If we check the available shape functions we can find the line
+
+                Try...
+                        
+            </div>
+            <div class="col-md-4">
+                <pre>
+    verticalDistance = 30;
+    function draw(){
+        background('blue');
+        line(0, 400, 640, 400);
+        circle(30, verticalDistance, 20);
+        verticalDistance = verticalDistance + 5;
+    }
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas6" class="Canvas">
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="started(6)" ng-click="start(6)">Try</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!started(6)" ng-click="stop(6)">Reset</button>
+            </div>
+        </div>
+            
+
+        <div class="row">
+            <div class="col-md-4">
+                Our canvas is 480 in height, we put the ground at 400 units away from the top. Below our line we still see the blue color which is confusing. Perhaps we can just fill that area. Instead of a line we can use a rectangle to mark the ground
+
+                Try...
+                
+            </div>
+            <div class="col-md-4">
+                <pre>
+    verticalDistance = 30;
+    function draw(){
+        background('blue');
+        rect(0, 400, 640, 80);
+        circle(30, verticalDistance, 20);
+        verticalDistance = verticalDistance + 5;
+    }
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas7" class="Canvas">
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="started(7)" ng-click="start(7)">Try</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!started(7)" ng-click="stop(7)">Reset</button>
+            </div>
+        </div>
+
+        
+        <div class="row">
+            <div class="col-md-4">
+                This gave us a white ground. We want to change the color. If we check the [color functions](https://p5js.org/reference/#group-Color) we will see _color_ function and _fill_ function.
+                
+                Try...
+                
+            </div>
+            <div class="col-md-4">
+                <pre>
+    verticalDistance = 30;
+    function draw(){
+        background('blue');
+        
+        fill(color('green'));
+        rect(0, 400, 640, 80);
+
+        fill(color('red'))
+        circle(30, verticalDistance, 20);
+
+        verticalDistance = verticalDistance + 5;
+    }
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas8" class="Canvas">
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="started(8)" ng-click="start(8)">Try</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!started(8)" ng-click="stop(8)">Reset</button>
+            </div>
+        </div>
+
+
+        <div class="row">
+            <div class="col-md-4">
+                TODO: Stop the ball 
+            </div>
+            <div class="col-md-4">
+                <pre>
+    verticalDistance = 30;
+    function draw(){
+        background('blue');
+        
+        fill(color('green'));
+        rect(0, 400, 640, 80);
+
+        fill(color('red'))
+        circle(30, verticalDistance, 20);
+
+        verticalDistance = verticalDistance + 5;
+    }
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas9" class="Canvas">
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="started(9)" ng-click="start(9)">Try</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!started(9)" ng-click="stop(9)">Reset</button>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-4">
+                TODO: Stop the ball better 
+            </div>
+            <div class="col-md-4">
+                <pre>
+    verticalDistance = 30;
+    function draw(){
+        background('blue');
+        
+        fill(color('green'));
+        rect(0, 400, 640, 80);
+
+        fill(color('red'))
+        circle(30, verticalDistance, 20);
+
+        verticalDistance = verticalDistance + 5;
+    }
+                </pre>
+            </div>
+            <div class="col-md-4">
+                <div id="canvas10" class="Canvas">
+                </div>
+                <button type="button" class="btn btn-primary" ng-disabled="started(10)" ng-click="start(10)">Try</button>
+                <button type="button" class="btn btn-primary" ng-disabled="!started(10)" ng-click="stop(10)">Reset</button>
+            </div>
+        </div>
+
+
+    </body>
+    <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+    <script>
+        var app = angular.module('App', [
+            'App.controllers'
+        ]);
+        var module = angular.module('App.controllers', []);
+        module.controller('Controller', function ($scope, $log, $timeout) {
+            const width = 640;
+            const height = 480;
+            const ground = 400;
+            const ballX = 30;
+            const ballSize = 20;
+            const sketches = {
+                1: (sketch) => {
+                    sketch.setup = () => {
+                        var canvas = sketch.createCanvas(width, height);
+                    };
+
+                    sketch.draw = () => {
+                        sketch.circle(ballX, 30, ballSize);
+                    };
+                },
+                2: (sketch) => {
+                    sketch.setup = () => {
+                        var canvas = sketch.createCanvas(640, 480);
+                    };
+
+                    sketch.draw = () => {
+                        verticalDistance = 30;
+                        sketch.circle(ballX, verticalDistance, ballSize);
+                        verticalDistance = verticalDistance + 5;
+                    };
+                },
+                3: (sketch) => {
+                    sketch.setup = () => {
+                        var canvas = sketch.createCanvas(width, height);
+                    };
+
+                    var verticalDistance = 30;
+                    sketch.draw = () => {
+                        sketch.circle(ballX, verticalDistance, ballSize);
+                        verticalDistance = verticalDistance + 5;
+                    };
+                }, 
+                4: (sketch) => {
+                    sketch.setup = () => {
+                        var canvas = sketch.createCanvas(width, height);
+                    };
+
+                    var verticalDistance = 30;
+                    sketch.draw = () => {
+                        sketch.background('blue');
+                        sketch.circle(ballX, verticalDistance, ballSize);
+                        verticalDistance = verticalDistance + 5;
+                    };
+                },
+                6: (sketch) => {
+                    sketch.setup = () => {
+                        var canvas = sketch.createCanvas(width, height);
+                    };
+
+                    var verticalDistance = 30;
+                    sketch.draw = () => {
+                        sketch.background('blue');
+                        sketch.line(0, 400, 640, 400);
+                        sketch.circle(ballX, verticalDistance, ballSize);
+                        verticalDistance = verticalDistance + 5;
+                    };
+                },
+                7: (sketch) => {
+                    sketch.setup = () => {
+                        var canvas = sketch.createCanvas(width, height);
+                    };
+
+                    var verticalDistance = 30;
+                    sketch.draw = () => {
+                        sketch.background('blue');
+                        sketch.rect(0, 400, 640, 80);
+                        sketch.circle(ballX, verticalDistance, ballSize);
+                        verticalDistance = verticalDistance + 5;
+                    };
+                },
+                8: (sketch) => {
+                    sketch.setup = () => {
+                        var canvas = sketch.createCanvas(width, height);
+                    };
+
+                    var verticalDistance = 30;
+                    sketch.draw = () => {
+                        sketch.background('blue');
+                        
+                        sketch.fill('green');
+                        sketch.rect(0, 400, 640, 80);
+
+                        sketch.fill('red')
+                        sketch.circle(ballX, verticalDistance, ballSize);
+
+                        verticalDistance = verticalDistance + 5;
+                    };
+                },
+                9: (sketch) => {
+                    sketch.setup = () => {
+                        var canvas = sketch.createCanvas(width, height);
+                    };
+
+                    var verticalDistance = 30;
+                    sketch.draw = () => {
+                        if (verticalDistance >= 400) 
+                            return;
+
+                        sketch.background('blue');
+                        
+                        sketch.fill('green');
+                        sketch.rect(0, 400, 640, 80);
+
+                        sketch.fill('red')
+                        sketch.circle(ballX, verticalDistance, ballSize);
+
+                        verticalDistance = verticalDistance + 5;
+                    };
+                },
+                10: (sketch) => {
+                    sketch.setup = () => {
+                        var canvas = sketch.createCanvas(width, height);
+                    };
+
+                    var verticalDistance = 30;
+                    sketch.draw = () => {
+                        if (verticalDistance > (400 - 20/2)) 
+                            return;
+
+                        sketch.background('blue');
+                        
+                        sketch.fill('green');
+                        sketch.rect(0, 400, 640, 80);
+
+                        sketch.fill('red')
+                        sketch.circle(ballX, verticalDistance, ballSize);
+
+                        verticalDistance = verticalDistance + 5;
+                    };
+                }
+            }
+
+            const graphics = {}
+
+            $scope.started = function(id){
+                return graphics[id];
+            }
+
+            $scope.start = function(id){
+                $log.log('start', id);
+                if(graphics[id]) {
+                    $log.log(id, ' is already active');
+                    return;
+                }
+                if(!sketches[id]) {
+                    $log.log(id, ' is not a known sketech');
+                    return;
+                }
+                graphics[id] = new p5(sketches[id], document.getElementById('canvas' + id));
+            }
+            $scope.stop = function(id){
+                $log.log('stop', id);
+                if(!graphics[id]) {
+                    $log.log(id, ' is not active yet');
+                    return;
+                }
+                canvas = document.getElementById('canvas' + id);
+                canvas.innerHTML = '';
+
+                delete graphics[id];
+                graphics[id] = undefined;
+            }
+
+        });
+
+
+    </script>
+</html>
